@@ -9,7 +9,7 @@ const returnPlaceholder = () => {
     const names = [['Donald Duck', 'Homer Simpson', 'Jerry Mouse', 'Bugs Bunny', 'Fred Flintstone', 'Spongebob Squarepants', 'Charlie Brown', 'Scoobie Doo', 'Stewie Griffin', 'Rick Sanchez'], ['Duke Ellington', 'Miles Davis', 'John Coltrane', 'Charles Mingus', 'Ornette Coleman', 'Nina Simone', 'Louis Armstrong', 'Herbie Hancock', 'George Benson', 'Ella Fitzgerald'], ['George Orwell', 'Aldous Huxley', 'Mary Shelley', 'J.G. Ballard', 'William Gibson', 'Jules Verne', 'H.G. Wells', ], ['Marie Curie', 'Rosalind Franklin', 'Lise Meitner', 'Ada Lovelace', 'Rachel Carson', 'Dorothy Hodgkin', 'Mar Anning', 'Chien-Shiung Wu']];
 
     const randomIndex = getRandomInt(names.length);
-    let str = 'UPLOAD DISTRIBUTION LIST IN THE FOLLOWING FORMAT:\n\n'
+    let str = 'ENTER DISTRIBUTION LIST IN THE FOLLOWING FORMAT:\n\n'
     let delimiter = ';'
     for (let i = 0; i< names[randomIndex].length; i++) {
         if (i === names[randomIndex].length-1) delimiter = '';
@@ -19,29 +19,22 @@ const returnPlaceholder = () => {
 }
 
 const formatLine = str => {
-    const dataArray = str.split(" ");
-    const firstName = dataArray[dataArray.length-2]; 
-    const surname = dataArray[0];
-    const regex = /\(n[eé]e ([^\s]+)\)/g;
-    let maidenName;
-    let fullName;
-
-    if (regex.test(str)) {
-        maidenName = str.match(regex)[0];
-        str = str.replace(regex, '');
-        fullName = `${firstName} ${surname} ${maidenName},`;
-    } else {
-        fullName = `${firstName} ${surname}`
-    }
-  
-    const emailAddressWithBrackets = dataArray[dataArray.length-1];
+    if (str === "") return str;
+    const emailAddressWithBrackets = str.match(/<.*>/)[0];
+    const unformattedName = str.replace(emailAddressWithBrackets, "");
+    const dataArray = unformattedName.split(",");
+    const unformattedFirstNames = dataArray[1]; 
+    const surnames = dataArray[0];
+    const firstNamesArr = unformattedFirstNames.split("");
+    firstNamesArr.pop();
+    firstNamesArr.shift();
+    const firstNames = firstNamesArr.join("");
+    const fullName = `${firstNames} ${surnames}`;
     const emailAddressArr = emailAddressWithBrackets.split("");
     emailAddressArr.pop();
     emailAddressArr.shift();
     const emailAddress = emailAddressArr.join("");
-    
-    return `${fullName}${emailAddress}`;
-
+    return `${fullName},${emailAddress}`;
 };
 
 const convertSemicolonToNewLine = str => {

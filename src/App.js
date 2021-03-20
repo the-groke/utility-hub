@@ -24,7 +24,7 @@ class App extends Component {
       base: "#f2f2f2",
       lightShade: "#ffffff",
       lightShade2: "#ededed",
-      darkShade: "#d9d9d9",
+      darkShade: "#d0d0d0",
       bewonderPurple: "#9164cc;",
       text: "#696969",
     },
@@ -32,7 +32,7 @@ class App extends Component {
       base: "#292929",
       lightShade: "#313131",
       lightShade2: "#252525",
-      darkShade: "#212121",
+      darkShade: "#181818",
       bewonderPurple: "#9164cc;",
       text: "#eeeeee",
     },
@@ -59,14 +59,14 @@ class App extends Component {
     return (
       <div>
           <ThemeProvider theme={this.state.darkMode ? this.state.darkTheme : this.state.lightTheme}>
-            <Router>
+            <Router basename={"/digital-team-utility-hub"}>
             <AppContainer>
               <Nav leaveHomePage={this.leaveHomePage} enterHomePage={this.enterHomePage} updateActiveIndex={this.updateActiveIndex} activeIndex={this.state.activeIndex} toggleDarkTheme={this.toggleDarkTheme} darkMode={this.state.darkMode}/>
               <MainContent onHomepage={this.state.onHomepage}>
                 <Route path="/wifi-data-formatter" render={props => <WifiFormatter {...props} leaveHomePage={this.leaveHomePage} updateActiveIndex={this.updateActiveIndex}/>} />
                 <Route path="/svg-map-formatter" render={props => <SvgFormatter {...props} leaveHomePage={this.leaveHomePage} updateActiveIndex={this.updateActiveIndex} activeIndex={this.state.activeIndex}/>}/>
                 <Route path="/distribution-list-exporter" render={props => <CsvConverter {...props} leaveHomePage={this.leaveHomePage} updateActiveIndex={this.updateActiveIndex} activeIndex={this.state.activeIndex}/>}/>
-                <Route exact path="/" component={() => <HomePage enterHomePage/>} />
+                <Route exact path="/" render={(props) => <HomePage {...props}enterHomePage/>} />
               </MainContent>
               </AppContainer>
             </Router>

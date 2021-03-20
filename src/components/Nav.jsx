@@ -35,7 +35,7 @@ class Nav extends Component {
                         </NavItem>
                     </NavItemList>
                     <SwitchContainer>
-                        Dark Mode:
+                        Dark mode:
                         <ToggleSwitchLabel HTMLfor="toggle-input">
                             <ToggleSwitch type="checkbox" id="toggle-input" onChange={(event) => this.props.toggleDarkTheme()}
                             checked={this.props.darkmode}/>

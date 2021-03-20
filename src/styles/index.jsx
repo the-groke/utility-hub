@@ -97,7 +97,9 @@ const Button = styled.button`
 	overflow: hidden;
 	transition: all 0.2s;
 	border-radius: 50px;
-
+	&:focus { 
+		outline: none; 
+	}
 	&:hover {
 		box-shadow: inset -1px 1px 3px ${props => props.theme.darkShade}, inset 1px -1px 3px ${props => props.theme.base};
 	}
@@ -145,7 +147,6 @@ const FileInputWrapper = styled.div`
 	cursor: pointer;
 	display: block;
 	border-radius: 30px;
-	
 	border: none;
 	font-size: 11px;
 	letter-spacing: 1.4px;
@@ -300,7 +301,7 @@ const FileCard = styled.div`
 	align-items: center;
 	margin: 5px 2px 5px 2px;
 	border-radius: 10px;
-	box-shadow: -3px 3px 5px #b0b0b0, 3px -3px 5px #ffffff;
+	box-shadow: -3px 3px 5px ${props => props.theme.darkShade}, 3px -3px 5px ${props => props.theme.lightShade};
 `;
 
 const Thumbnail = styled.div`

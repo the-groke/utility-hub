@@ -1,6 +1,6 @@
 body {
 	margin: 0;
-	font-family: "Gotham A", "Gotham B";
+	font-family: "Gotham A", "Gotham B", sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	background: #f2f2f2;
