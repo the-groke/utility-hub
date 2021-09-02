@@ -1,5 +1,13 @@
 import * as XLSX from 'xlsx';
 
+const writeFileQ = (workbook, filename) => {
+    return new Promise((resolve, reject) => {
+        XLSX.writeFile(filename, workbook, (error, result) => {
+            (error)? reject(error) : resolve(result);
+        })
+    })
+}
+
 const {
 	getCentres,
 	getDataByCentre,
@@ -14,6 +22,7 @@ const handleSaveToPC = (fileName, jsonArr) => {
 	const wb = XLSX.utils.book_new();
 	XLSX.utils.book_append_sheet(wb, ws, 'wifi-data');
 	XLSX.writeFile(wb, fileName);
+
 };
 
 // LIM and L&G
@@ -28,6 +37,8 @@ const createMultipleFiles = (data) => {
 
 	handleSaveToPC(fileName, deDuped);
 };
+
+// ASI
 
 const createASIFiles = (data) => {
 	const formattedData = data.map((datum) => {

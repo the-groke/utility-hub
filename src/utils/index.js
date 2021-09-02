@@ -77,7 +77,7 @@ exports.returnFileName = (centre) => {
 		'dec',
 	];
 	const lastMonth = months.slice(today.getMonth() - 1)[0];
-	return `${centre.split(' ').join('-').toLowerCase()}-${lastMonth}-wifi.csv`;
+	return `${centre.split(' ').join('-').toLowerCase()}-${lastMonth}-wifi.xlsx`;
 };
 
 exports.objectKeysToLowerCase = (object) => {
@@ -238,6 +238,7 @@ exports.validateInputFormat = (object) => {
 			'online_time_seconds',
 			'postcode',
 			'gender',
+			'agerange',
 			'agent_device',
 			'email',
 		])
@@ -283,6 +284,7 @@ exports.validateInputFormat = (object) => {
 };
 
 exports.sortDataIntoFiles = (data) => {
+	console.log(data);
 	if (data.length === 0) return data;
 
 	const files = [];
@@ -292,6 +294,7 @@ exports.sortDataIntoFiles = (data) => {
 	}, []);
 
 	const centres = this.getCentres(flattenedArr);
+	console.log(centres);
 	flattenedArr.forEach((item) => {
 		centres.forEach((centre, i) => {
 			if (item['Registration Location Name'] === centre && !files[i]) {

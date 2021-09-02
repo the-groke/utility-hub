@@ -72,38 +72,38 @@ class Uploader extends Component {
 			})
 		} else {
 
-			// identify erroneous landmark IDs
-			if (SVGString.match(landmarkIdentifierRegex)) {
-				landmarkIDs = SVGString.match(landmarkIdentifierRegex);
-			}
-			// fix erroneous landmark IDs
-			for (let i = 0; i < landmarkIDs.length; i++) {
-				fixedIDs.push(landmarkIDs[i].replace(extraIndexRegex, ''));
-			}
+			// // identify erroneous landmark IDs
+			// if (SVGString.match(landmarkIdentifierRegex)) {
+			// 	landmarkIDs = SVGString.match(landmarkIdentifierRegex);
+			// }
+			// // fix erroneous landmark IDs
+			// for (let i = 0; i < landmarkIDs.length; i++) {
+			// 	fixedIDs.push(landmarkIDs[i].replace(extraIndexRegex, ''));
+			// }
 			// add main ID before classes in styles
 			const stringWithSVGIDs = SVGString.replace(classRegex, `#${SVGID} $&`);
 
 			// find and replace erroneous IDs with fixed IDs
 	
-			let stringWithIDsRemoved = stringWithSVGIDs;
+			// let stringWithIDsRemoved = stringWithSVGIDs;
 	
-			if (fixedIDs.length !== 0) {
-				for (let i = 0; i < landmarkIDs.length; i++) {
-					stringWithIDsRemoved = stringWithIDsRemoved.replace(landmarkIDs[i], fixedIDs[i]);
-				}
-			}
-			const svgJson = await parse(stringWithIDsRemoved);
-			svgJson.attributes.id = SVGID;
+			// if (fixedIDs.length !== 0) {
+			// 	for (let i = 0; i < landmarkIDs.length; i++) {
+			// 		stringWithIDsRemoved = stringWithIDsRemoved.replace(landmarkIDs[i], fixedIDs[i]);
+			// 	}
+			// }
+			// const svgJson = await parse(stringWithIDsRemoved);
+			// svgJson.attributes.id = SVGID;
 
 			// rename layers
 
-			svgJson.children[1].attributes.id = "base";
-			svgJson.children[2].attributes.id = "landmarks";
-			svgJson.children[3].attributes.id = "nopointer";
+			// svgJson.children[1].attributes.id = "base";
+			// svgJson.children[2].attributes.id = "landmarks";
+			// svgJson.children[3].attributes.id = "nopointer";
 
 			// prep and write file
-			const stringifiedJson = stringify(svgJson);
-			const blob = new Blob([stringifiedJson], { type: 'svg' });
+			// const stringifiedJson = stringify(svgJson);
+			const blob = new Blob([stringWithSVGIDs], { type: 'svg' });
 			const url = URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.download = `${fileName}`;

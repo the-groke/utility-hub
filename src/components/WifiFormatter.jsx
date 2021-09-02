@@ -123,7 +123,6 @@ class Uploader extends Component {
 		} else if (validatedInput === true && output === '2') {
 			for (let i = 0; i < filesData.length; i++) {
 				for (let j = 0; j < filesData[i].length; j++) {
-					console.log(filesData[i][j]);
 					filesData[i][j]['expiry date'] = getExpiryDateFromFileName(
 						fileNames[i],
 						'bt-mult'
@@ -132,7 +131,8 @@ class Uploader extends Component {
 			}
 			const sortedData = sortDataIntoFiles(filesData);
 			for (let i = 0; i < sortedData.length; i++) {
-				createMultipleFiles(sortedData[i]);
+				createMultipleFiles(sortedData[i]); 
+				console.log(i);
 			}
 		} else if (validatedInput === true && output === '3') {
 			const sortedData = sortASIDataIntoFiles(filesData);
