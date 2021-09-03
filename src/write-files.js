@@ -17,7 +17,7 @@ const {
 	removeDuplicateEmails,
 } = require('./utils');
 
-const handleSaveToPC = (fileName, jsonArr) => {
+const saveToPC = (fileName, jsonArr) => {
 	const ws = XLSX.utils.json_to_sheet(jsonArr);
 	const wb = XLSX.utils.book_new();
 	XLSX.utils.book_append_sheet(wb, ws, 'wifi-data');
@@ -27,7 +27,7 @@ const handleSaveToPC = (fileName, jsonArr) => {
 
 // LIM and L&G
 
-const createMultipleFiles = (data) => {
+const createLimLGFile = (data) => {
 	const formattedData = data.map((datum) => {
 		return formatDatum(datum);
 	});
@@ -35,12 +35,12 @@ const createMultipleFiles = (data) => {
 	const deDuped = removeDuplicateEmails(formattedData);
 	const fileName = returnFileName(deDuped[0]['registration location name']);
 
-	handleSaveToPC(fileName, deDuped);
+	saveToPC(fileName, deDuped);
 };
 
 // ASI
 
-const createASIFiles = (data) => {
+const createASIFile = (data) => {
 	const formattedData = data.map((datum) => {
 		return formatDatum(datum);
 	});
@@ -48,22 +48,22 @@ const createASIFiles = (data) => {
 	const deDuped = removeDuplicateEmails(formattedData);
 	const fileName = returnFileName(deDuped[0]['location name']);
 
-	handleSaveToPC(fileName, deDuped);
+	saveToPC(fileName, deDuped);
 };
 
 // Inkspot/Freerunner/ASI
 
-const createSingleFile = (fileName, data) => {
+const createSingleInputFile = (fileName, data) => {
 	const formattedData = data.map((datum) => {
 		return formatDatum(datum);
 	});
 	const filteredByMonth = filterDataByMonth(formattedData);
 	const deDupedAndFilteredByMonth = removeDuplicateEmails(filteredByMonth);
 
-	handleSaveToPC(
+	saveToPC(
 		returnFileName(fileName.substring(0, fileName.length - 4)),
 		deDupedAndFilteredByMonth
 	);
 };
 
-export { createMultipleFiles, createSingleFile, createASIFiles };
+export { createLimLGFile, createSingleInputFile, createASIFile };

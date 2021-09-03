@@ -294,6 +294,7 @@ const FileListContainer = styled.div`
 `;
 
 const FileCard = styled.div`
+	position: relative;
 	height: 100px;
 	width: 596px;
 	color: ${props => props.theme.text};
@@ -303,6 +304,13 @@ const FileCard = styled.div`
 	border-radius: 10px;
 	box-shadow: -3px 3px 5px ${props => props.theme.darkShade}, 3px -3px 5px ${props => props.theme.lightShade};
 `;
+
+const DownloadButton = styled.a`
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	cursor: pointer;
+`
 
 const Thumbnail = styled.div`
 	background: #ddd;
@@ -445,6 +453,7 @@ export {
 	UploaderFooter,
 	FileList,
 	FileCard,
+	DownloadButton,
 	Thumbnail,
 	FileListContainer,
 	ButtonWrapper,

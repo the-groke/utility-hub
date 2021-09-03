@@ -4,11 +4,12 @@ import {
 	sortDataIntoFiles,
 	sortASIDataIntoFiles,
 	getExpiryDateFromFileName,
+	returnFileName,
 } from '../utils';
 import {
-	createSingleFile,
-	createMultipleFiles,
-	createASIFiles,
+	createSingleInputFile,
+	createLimLGFile,
+	createASIFile,
 } from '../write-files';
 import {
 	Button,
@@ -26,6 +27,7 @@ import {
 	UploaderFooter,
 	FileList,
 	FileCard,
+	DownloadButton,
 	Thumbnail,
 	FileListContainer,
 	ButtonWrapper,
@@ -37,19 +39,22 @@ const csv = require('csvtojson');
 
 class Uploader extends Component {
 	state = {
-		fileNames: [],
+		inputFileNames: [],
+		outputFileNames: [],
 		output: '0',
 		files: [],
 		filesData: [],
 		errorMessage: '',
-		uploadedFileNames: [],
+		uploadedinputFileNames: [],
 		selectIsHovered: false,
+		sortedData: [],
 	};
 	onChange = (event) => {
-		const fileNames = [];
+		const inputFileNames = [];
+		const outputFileNames = [];
 		const filesData = [];
 		for (let i = 0; i < event.target.files.length; i++) {
-			fileNames.push(event.target.files[i].name);
+			inputFileNames.push(event.target.files[i].name);
 			const reader = new FileReader();
 			reader.readAsText(event.target.files[i]);
 			reader.onload = async (e) => {
@@ -59,7 +64,7 @@ class Uploader extends Component {
 		}
 		this.setState({
 			files: event.target.files,
-			fileNames,
+			inputFileNames,
 			errorMessage: '',
 			filesData,
 		});
@@ -113,41 +118,48 @@ class Uploader extends Component {
 	};
 	onSubmit = async (event) => {
 		event.preventDefault();
-		const { output, fileNames, filesData } = this.state;
+		const { output, inputFileNames, filesData } = this.state;
 		const validatedInput = await this.isInputValid();
 
 		if (validatedInput === true && output === '1') {
-			for (let i = 0; i < fileNames.length; i++) {
-				createSingleFile(fileNames[i], filesData[i]);
-			}
+			// for (let i = 0; i < inputFileNames.length; i++) {
+			// 	createSingleInputFile(inputFileNames[i], filesData[i]);
+			// }
+			this.setState({sortedData : filesData, outputFileNames: this.state.inputFileNames});
 		} else if (validatedInput === true && output === '2') {
 			for (let i = 0; i < filesData.length; i++) {
 				for (let j = 0; j < filesData[i].length; j++) {
 					filesData[i][j]['expiry date'] = getExpiryDateFromFileName(
-						fileNames[i],
+						inputFileNames[i],
 						'bt-mult'
 					);
 				}
 			}
 			const sortedData = sortDataIntoFiles(filesData);
+			const outputFileNames = [];
 			for (let i = 0; i < sortedData.length; i++) {
-				createMultipleFiles(sortedData[i]); 
-				console.log(i);
+				outputFileNames.push(returnFileName(sortedData[i][0]['Registration Location Name']));
+			// 	createLimLGFile(sortedData[i]); 
 			}
+			this.setState({sortedData, outputFileNames});
 		} else if (validatedInput === true && output === '3') {
 			const sortedData = sortASIDataIntoFiles(filesData);
+			const outputFileNames = [];
 			for (let i = 0; i < sortedData.length; i++) {
-				createASIFiles(sortedData[i]);
+				outputFileNames.push(returnFileName(sortedData[0]['location name']));
+			// 	createASIFiles(sortedData[i]);
 			}
+			this.setState({sortedData, outputFileNames});
 		} else if (validatedInput === true && output === '4') {
 			for (let i = 0; i < filesData.length; i++) {
 				for (let j = 0; j < filesData[i].length; j++) {
 					filesData[i][j]['expiry date'] = getExpiryDateFromFileName(
-						fileNames[i],
+						inputFileNames[i],
 						'inkspot'
 					);
 				}
-				createSingleFile(fileNames[i], filesData[i]);
+				// createSingleInputFile(inputFileNames[i], filesData[i]);
+				this.setState({sortedData: filesData, outputFileNames: inputFileNames})
 			}
 		}
 	};
@@ -158,16 +170,32 @@ class Uploader extends Component {
 		this.props.leaveHomePage();
 		this.props.updateActiveIndex(0)
 	};
+	handleDownload = (index) => {
+		const { outputFileNames, sortedData, output } = this.state;
+		switch(output) {
+			case "1":
+			case "4":
+				createSingleInputFile(outputFileNames[index], sortedData[index]);
+			  break;
+			case "2":
+				createLimLGFile(sortedData[index]); 
+			  break;
+			case "3":
+				createASIFile(sortedData[index]);
+			  break;
+			default:
+				createSingleInputFile(outputFileNames[index], sortedData[index]);
+		  }
+		
+	}
 	render() {
 		return (
 			<div>
-				
 				<UtilityTitle>Wifi Data Formatter</UtilityTitle>
 				<UploaderContainer>
 				<Form onSubmit={this.onSubmit} action="">
 					<UploaderHeader>
-						{/* <UploaderHeaderInner> */}
-						<ButtonWrapper>
+							<ButtonWrapper>
 								<InnerButtonWrapper>
 									<FileInputWrapper>
 										<FileInput
@@ -184,7 +212,6 @@ class Uploader extends Component {
 									</FileInputWrapper>
 								</InnerButtonWrapper>
 							</ButtonWrapper>
-						
 
 						<SelectWrapper>
 							<Select
@@ -211,14 +238,15 @@ class Uploader extends Component {
 								</Button>
 							</InnerButtonWrapper>
 						</ButtonWrapper>
-						{/* </UploaderHeaderInner>		 */}
 					</UploaderHeader>
+					
 				</Form>
 				<FileListContainer>
 					<FileList>
-						{this.state.fileNames.map((fileName, index) => {
+						{this.state.outputFileNames.map((fileName, index) => {
 							return (
 								<FileCard key={index}>
+									<DownloadButton onClick={() => this.handleDownload(index)}><i className="fa fa-download"></i></DownloadButton>
 									<Thumbnail>.CSV</Thumbnail>
 									{fileName}
 								</FileCard>
