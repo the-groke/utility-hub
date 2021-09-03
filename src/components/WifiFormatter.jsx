@@ -246,7 +246,7 @@ class Uploader extends Component {
 						{this.state.outputFileNames.map((fileName, index) => {
 							return (
 								<FileCard key={index}>
-									<DownloadButton onClick={() => this.handleDownload(index)}><i className="fa fa-download"></i></DownloadButton>
+									<DownloadButton alt="Download File" title="Download File" onClick={() => this.handleDownload(index)}><i className="fa fa-download"></i></DownloadButton>
 									<Thumbnail>.CSV</Thumbnail>
 									{fileName}
 								</FileCard>
