@@ -1,10 +1,10 @@
-# Getting Started with Create React App
+# Digital Team Utility Hub
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This hub combines a couple of utilities built for the purpose of aiding day to day tasks at Bewonder\*
 
-## Available Scripts
+A hosted version can be found [here](https://bewonder.digital/digital-team-utility-hub/)
 
-In the project directory, you can run:
+## Available Scripts for Development
 
 ### `npm start`
 
@@ -14,57 +14,63 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
 ### `npm run build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Utilities
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Wifi Data Formatter
+2. Distribution List Exporter
 
-### `npm run eject`
+## Wifi Data Formatter
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Original repo found here: [GitHub - BenRut/wifi-data-formatter](https://github.com/BenRut/wifi-data-formatter)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### What it does
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Bewonder\* collects sets of data in CSV form obtained via WiFi sign-ups across various centres managed by the company. This data is provided by a few different WiFi providers in different formats. They are variously provided as weekly CSVs, monthly CSVs, CSVs containing one centre, CSVs containing a number of centres. Additionally, the data is often formatted in ways which make it less useful once uploaded into Force24, the platform we use for sending marketing communications across schemes.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+This tool takes what used to be a laborious manual task of sorting the data into individual files for each centre which can then be uploaded to Force24 to add to its marketing lists.
 
-## Learn More
+### Testing the tool
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Included in the repository is a set of test files in `./test-data/` , which can be run through the tool to see it in action. Alternatively, real data can be used.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Multiple files from the same provider can be uploaded at once and the tool will sort and format the data and produce a list of files which can be downloaded.
 
-### Code Splitting
+### Updating the tool
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Occasionally, Wifi providers (BT, Freerunner etc) may change the format in which we receive their data. For example, they may add, delete or change the names of columns within the CSV or XLSX files they provide. In this instance the tool will need to be updated as it will not recognise the data and will throw up an error message.
 
-### Analyzing the Bundle Size
+To update the tool, go to `./src/utils/index.js` and ensure the columns in the array for the relevant centre in `exports.validateInputFormat`
+match those in the file being uploaded e.g.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```js
+this.arrayCompare(Object.keys(object), [
+            ‘Email’,
+            ‘Estate Name’,
+            ‘Federated Group Name’,
+            ‘First Name’,
+            ‘Last Name’,
+            ‘Location Name’,
+            ‘Marketing Consent’,
+            ‘Postcode’,
+            ‘Week Ending’,
+        ])
+```
 
-### Making a Progressive Web App
+## Distribution List Exporter
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Original repo found here: [GitHub - BenRut/csv-converter](https://github.com/BenRut/csv-converter)
 
-### Advanced Configuration
+### What it does
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Internal communications within JLL for Consulting and Managed Services are built, sent and managed through Poppulo. The distribution lists within Poppulo are independent of the distribution lists accessible via Outlook. Occasionally Client Services will provide a list of contacts in a string copied from an expanded distribution list from Outlook in the format `Curie, Marie <Marie.Curie@outlook.co.uk>; Franklin, Rosalind <Rosalind.Franklin@outlook.co.uk>; Meitner, Lise <Lise.Meitner@outlook.co.uk>; Lovelace, Ada <Ada.Lovelace@outlook.co.uk>; Carson, Rachel <Rachel.Carson@outlook.co.uk>; Hodgkin, Dorothy <Dorothy.Hodgkin@outlook.co.uk>; Anning, Mar <Mar.Anning@outlook.co.uk>; Wu, Chien-Shiung <Chien-Shiung.Wu@outlook.co.uk> `.
 
-### Deployment
+This string can be entered into the tool which can then loop through the string and organise the data into a CSV before forcing the download to the browser. This CSV can then be uploaded to Poppulo in order to create or update a distribution list.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Extra features
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The tool displays a placeholder in the textarea giving an example of the format the string should be entered in. This will display one set of random names set around a theme. New sets can be added by adding a new array within the `names` array in the `returnPlaceholder` function in `./src/utils/csv-converter.js`
