@@ -33,7 +33,7 @@ import {
 	ButtonWrapper,
 	InnerButtonWrapper,
 	UtilityTitle,
-	UploaderHeaderInner
+	UploaderHeaderInner,
 } from '../styles';
 const csv = require('csvtojson');
 
@@ -125,7 +125,10 @@ class Uploader extends Component {
 			// for (let i = 0; i < inputFileNames.length; i++) {
 			// 	createSingleInputFile(inputFileNames[i], filesData[i]);
 			// }
-			this.setState({sortedData : filesData, outputFileNames: this.state.inputFileNames});
+			this.setState({
+				sortedData: filesData,
+				outputFileNames: this.state.inputFileNames,
+			});
 		} else if (validatedInput === true && output === '2') {
 			for (let i = 0; i < filesData.length; i++) {
 				for (let j = 0; j < filesData[i].length; j++) {
@@ -138,18 +141,20 @@ class Uploader extends Component {
 			const sortedData = sortDataIntoFiles(filesData);
 			const outputFileNames = [];
 			for (let i = 0; i < sortedData.length; i++) {
-				outputFileNames.push(returnFileName(sortedData[i][0]['Registration Location Name']));
-			// 	createLimLGFile(sortedData[i]); 
+				outputFileNames.push(
+					returnFileName(sortedData[i][0]['Registration Location Name'])
+				);
+				// 	createLimLGFile(sortedData[i]);
 			}
-			this.setState({sortedData, outputFileNames});
+			this.setState({ sortedData, outputFileNames });
 		} else if (validatedInput === true && output === '3') {
 			const sortedData = sortASIDataIntoFiles(filesData);
 			const outputFileNames = [];
 			for (let i = 0; i < sortedData.length; i++) {
-				outputFileNames.push(returnFileName(sortedData[0]['location name']));
-			// 	createASIFiles(sortedData[i]);
+				outputFileNames.push(returnFileName(sortedData[i][0]['Location Name']));
+				// 	createASIFiles(sortedData[i]);
 			}
-			this.setState({sortedData, outputFileNames});
+			this.setState({ sortedData, outputFileNames });
 		} else if (validatedInput === true && output === '4') {
 			for (let i = 0; i < filesData.length; i++) {
 				for (let j = 0; j < filesData[i].length; j++) {
@@ -159,7 +164,10 @@ class Uploader extends Component {
 					);
 				}
 				// createSingleInputFile(inputFileNames[i], filesData[i]);
-				this.setState({sortedData: filesData, outputFileNames: inputFileNames})
+				this.setState({
+					sortedData: filesData,
+					outputFileNames: inputFileNames,
+				});
 			}
 		}
 	};
@@ -168,33 +176,32 @@ class Uploader extends Component {
 	};
 	componentDidMount = () => {
 		this.props.leaveHomePage();
-		this.props.updateActiveIndex(0)
+		this.props.updateActiveIndex(0);
 	};
 	handleDownload = (index) => {
 		const { outputFileNames, sortedData, output } = this.state;
-		switch(output) {
-			case "1":
-			case "4":
+		switch (output) {
+			case '1':
+			case '4':
 				createSingleInputFile(outputFileNames[index], sortedData[index]);
-			  break;
-			case "2":
-				createLimLGFile(sortedData[index]); 
-			  break;
-			case "3":
+				break;
+			case '2':
+				createLimLGFile(sortedData[index]);
+				break;
+			case '3':
 				createASIFile(sortedData[index]);
-			  break;
+				break;
 			default:
 				createSingleInputFile(outputFileNames[index], sortedData[index]);
-		  }
-		
-	}
+		}
+	};
 	render() {
 		return (
 			<div>
 				<UtilityTitle>Wifi Data Formatter</UtilityTitle>
 				<UploaderContainer>
-				<Form onSubmit={this.onSubmit} action="">
-					<UploaderHeader>
+					<Form onSubmit={this.onSubmit} action="">
+						<UploaderHeader>
 							<ButtonWrapper>
 								<InnerButtonWrapper>
 									<FileInputWrapper>
@@ -213,56 +220,60 @@ class Uploader extends Component {
 								</InnerButtonWrapper>
 							</ButtonWrapper>
 
-						<SelectWrapper>
-							<Select
-								value={this.state.output}
-								name=""
-								id="wifi-provider"
-								onChange={this.onSelect}
-								onMouseEnter={this.toggleSelectHover}
-								onMouseLeave={this.toggleSelectHover}
-								hover={this.state.selectIsHovered}
-							>
-								<option value="0">Select Wi-Fi provider</option>
-								<option value="1">Freerunner</option>
-								<option value="2">BT(LIM)/BT(L&amp;G)</option>
-								<option value="3">BT(ASI)</option>
-								<option value="4">Inkspot</option>
-							</Select>
-							<SelectArrow hover={this.state.selectIsHovered}></SelectArrow>
-						</SelectWrapper>
-						<ButtonWrapper>
-							<InnerButtonWrapper>
-								<Button type="submit">
-									<span>Format</span>
-								</Button>
-							</InnerButtonWrapper>
-						</ButtonWrapper>
-					</UploaderHeader>
-					
-				</Form>
-				<FileListContainer>
-					<FileList>
-						{this.state.outputFileNames.map((fileName, index) => {
-							return (
-								<FileCard key={index}>
-									<DownloadButton alt="Download File" title="Download File" onClick={() => this.handleDownload(index)}><i className="fa fa-download"></i></DownloadButton>
-									<Thumbnail>.CSV</Thumbnail>
-									{fileName}
-								</FileCard>
-							);
-						})}
-					</FileList>
-				</FileListContainer>
+							<SelectWrapper>
+								<Select
+									value={this.state.output}
+									name=""
+									id="wifi-provider"
+									onChange={this.onSelect}
+									onMouseEnter={this.toggleSelectHover}
+									onMouseLeave={this.toggleSelectHover}
+									hover={this.state.selectIsHovered}
+								>
+									<option value="0">Select Wi-Fi provider</option>
+									<option value="1">Freerunner</option>
+									<option value="2">BT(LIM)/BT(L&amp;G)</option>
+									<option value="3">BT(ASI)</option>
+									<option value="4">Inkspot</option>
+								</Select>
+								<SelectArrow hover={this.state.selectIsHovered}></SelectArrow>
+							</SelectWrapper>
+							<ButtonWrapper>
+								<InnerButtonWrapper>
+									<Button type="submit">
+										<span>Format</span>
+									</Button>
+								</InnerButtonWrapper>
+							</ButtonWrapper>
+						</UploaderHeader>
+					</Form>
+					<FileListContainer>
+						<FileList>
+							{this.state.outputFileNames.map((fileName, index) => {
+								return (
+									<FileCard key={index}>
+										<DownloadButton
+											alt="Download File"
+											title="Download File"
+											onClick={() => this.handleDownload(index)}
+										>
+											<i className="fa fa-download"></i>
+										</DownloadButton>
+										<Thumbnail>.CSV</Thumbnail>
+										{fileName}
+									</FileCard>
+								);
+							})}
+						</FileList>
+					</FileListContainer>
 
-				<UploaderFooter>
-					{this.state.errorMessage !== '' && (
-						<ErrorMessage>{this.state.errorMessage}</ErrorMessage>
-					)}
-				</UploaderFooter>
-			</UploaderContainer>
+					<UploaderFooter>
+						{this.state.errorMessage !== '' && (
+							<ErrorMessage>{this.state.errorMessage}</ErrorMessage>
+						)}
+					</UploaderFooter>
+				</UploaderContainer>
 			</div>
-			
 		);
 	}
 }
