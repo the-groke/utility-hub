@@ -152,7 +152,6 @@ class Uploader extends Component {
 			const outputFileNames = [];
 			for (let i = 0; i < sortedData.length; i++) {
 				outputFileNames.push(returnFileName(sortedData[i][0]['Location Name']));
-				// 	createASIFiles(sortedData[i]);
 			}
 			this.setState({ sortedData, outputFileNames });
 		} else if (validatedInput === true && output === '4') {
